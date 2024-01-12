@@ -47,10 +47,11 @@ export class NumberToWords {
   public toWords = (num: string | number): string => {
     let val: number;
     if (typeof num === 'string') {
-      val = Number(num);
+      val = Number(num.replace(/,/g, ''));
     } else {
       val = num;
     }
+    // console.log('Val-----', val);
 
     if (val === 0) {
       return this.words1To19[0];
