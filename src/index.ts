@@ -5,46 +5,104 @@ export enum LangCodes {
 }
 
 export class NumberToWords {
-  private words1To19: string[] = [
-    'zero',
-    'one',
-    'two',
-    'three',
-    'four',
-    'five',
-    'six',
-    'seven',
-    'eight',
-    'nine',
-    'ten',
-    'eleven',
-    'twelve',
-    'thirteen',
-    'fourteen',
-    'fifteen',
-    'sixteen',
-    'seventeen',
-    'eighteen',
-    'nineteen',
-  ];
-  private wordsTens: string[] = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-  private wordsBig: string[] = [
-    '',
-    'thousand',
-    'million',
-    'billion',
-    'trillion',
-    'quadrillion',
-    'quintillion',
-    'sextillion',
-    'septillion',
-    'octillion',
-    'nonillion',
-    'decillion',
-  ];
+  private wordsGeneral: { [langCode: string]: string[] } = {
+    EN: ['hundred', 'and', 'point'],
+    FR: ['cent', 'et', 'virgule'],
+  };
+  private words1To19: { [langCode: string]: string[] } = {
+    EN: [
+      'zero',
+      'one',
+      'two',
+      'three',
+      'four',
+      'five',
+      'six',
+      'seven',
+      'eight',
+      'nine',
+      'ten',
+      'eleven',
+      'twelve',
+      'thirteen',
+      'fourteen',
+      'fifteen',
+      'sixteen',
+      'seventeen',
+      'eighteen',
+      'nineteen',
+    ],
+    FR: [
+      'zero',
+      'un',
+      'deux',
+      'trois',
+      'quatre',
+      'cinq',
+      'six',
+      'sept',
+      'huit',
+      'neuf',
+      'dix',
+      'onze',
+      'douze',
+      'treize',
+      'quatorze',
+      'quinze',
+      'seize',
+      'dix-sept',
+      'dix-huit',
+      'dix-neuf',
+    ],
+  };
+  private wordsTens: { [langCode: string]: string[] } = {
+    EN: ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'],
+    FR: [
+      '',
+      '',
+      'vingt',
+      'trente',
+      'quarante',
+      'cinquante',
+      'soixante',
+      'soixante-dix',
+      'quatre-vingts',
+      'quatre-vingt-dix',
+    ],
+  };
+  private wordsBig: { [langCode: string]: string[] } = {
+    EN: [
+      '',
+      'thousand',
+      'million',
+      'billion',
+      'trillion',
+      'quadrillion',
+      'quintillion',
+      'sextillion',
+      'septillion',
+      'octillion',
+      'nonillion',
+      'decillion',
+    ],
+    FR: [
+      '',
+      'mille',
+      'million',
+      'milliard',
+      'trillion',
+      'quadrillion',
+      'quintillion',
+      'sextillion',
+      'septillion',
+      'octillion',
+      'nonillion',
+      'décillion',
+    ],
+  };
 
   // Function to words
-  public toWords = (num: string | number): string => {
+  public toWords = (num: string | number, langCode = 'EN'): string => {
     let val: number;
     // Clean value if it is number or string
     if (typeof num === 'string') {
@@ -62,28 +120,35 @@ export class NumberToWords {
     // console.log('🚀 ~ decimalPart:', decimalPart);
 
     if (integerPart === 0 && decimalPart === 0) {
-      return this.words1To19[0];
+      return this.words1To19[langCode][0];
     }
 
-    let numWords: string = this.convertToWords(integerPart);
+    let numWords: string = this.convertToWords(integerPart, langCode);
     numWords =
       numWords +
-      (decimalPart !== 0 ? ' point ' + this.convertDecimalToWords(decimalPart, true, decimalPartStartByZero) : '');
+      (decimalPart !== 0
+        ? ` ${this.wordsGeneral[langCode][2]} ` +
+          this.convertDecimalToWords(decimalPart, langCode, decimalPartStartByZero)
+        : '');
     return numWords;
   };
 
   // Function convertor number
-  private convertToWords = (n: number, isAndNecessary: boolean = true): string => {
+  private convertToWords = (n: number, langCode: string): string => {
     let convertedWords;
     if (n < 20) {
-      convertedWords = this.words1To19[n];
+      convertedWords = this.words1To19[langCode][n];
     } else if (n < 100) {
-      convertedWords = this.wordsTens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + this.words1To19[n % 10] : '');
+      convertedWords =
+        this.wordsTens[langCode][Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + this.words1To19[langCode][n % 10] : '');
     } else if (n < 1000) {
       convertedWords =
-        this.words1To19[Math.floor(n / 100)] +
-        ' hundred' +
-        (n % 100 !== 0 ? `${isAndNecessary ? ' and ' : ' '}` + this.convertToWords(n % 100) : '');
+        this.words1To19[langCode][Math.floor(n / 100)] +
+        ` ${this.wordsGeneral[langCode][0]}` +
+        (n % 100 !== 0
+          ? `${langCode === 'EN' ? ` ${this.wordsGeneral[langCode][1]} ` : ' '}` +
+            this.convertToWords(n % 100, langCode)
+          : '');
     } else {
       let words = '';
       // const numLength = n.toString().length;
@@ -100,9 +165,9 @@ export class NumberToWords {
         // console.log(`n % 1000 val---- ${i}`, part);
         if (part !== 0) {
           words =
-            `${localLengthHundred ? 'and ' : ''}` +
-            this.convertToWords(part) +
-            (this.wordsBig[i] ? ' ' + this.wordsBig[i] : ' ') +
+            `${localLengthHundred ? `${langCode === 'EN' ? `${this.wordsGeneral[langCode][1]} ` : ''}` : ''}` +
+            this.convertToWords(part, langCode) +
+            (this.wordsBig[langCode][i] ? ' ' + this.wordsBig[langCode][i] : ' ') +
             ' ' +
             words;
         }
@@ -115,11 +180,7 @@ export class NumberToWords {
   };
 
   // Function convertor decimal
-  private convertDecimalToWords = (
-    n: number,
-    isAndNecessary: boolean = true,
-    decimalPartStartByZero: boolean = false,
-  ): string => {
+  private convertDecimalToWords = (n: number, langCode: string, decimalPartStartByZero: boolean = false): string => {
     let convertedWords;
     const numberLength = n.toString().length;
     // console.log('🚀~ numberLength:', numberLength);
@@ -127,46 +188,50 @@ export class NumberToWords {
     if (numberLength === 1 && !decimalPartStartByZero) {
       switch (n) {
         case 1:
-          convertedWords = this.words1To19[10];
+          convertedWords = this.words1To19[langCode][10];
           break;
         case 2:
-          convertedWords = this.wordsTens[2];
+          convertedWords = this.wordsTens[langCode][2];
           break;
         case 3:
-          convertedWords = this.wordsTens[3];
+          convertedWords = this.wordsTens[langCode][3];
           break;
         case 4:
-          convertedWords = this.wordsTens[4];
+          convertedWords = this.wordsTens[langCode][4];
           break;
         case 5:
-          convertedWords = this.wordsTens[5];
+          convertedWords = this.wordsTens[langCode][5];
           break;
         case 6:
-          convertedWords = this.wordsTens[6];
+          convertedWords = this.wordsTens[langCode][6];
           break;
         case 7:
-          convertedWords = this.wordsTens[7];
+          convertedWords = this.wordsTens[langCode][7];
           break;
         case 8:
-          convertedWords = this.wordsTens[8];
+          convertedWords = this.wordsTens[langCode][8];
           break;
         case 9:
-          convertedWords = this.wordsTens[9];
+          convertedWords = this.wordsTens[langCode][9];
           break;
         default:
-          convertedWords = this.words1To19[0];
+          convertedWords = this.words1To19[langCode][0];
           break;
       }
     } else {
       if (n < 20) {
-        convertedWords = this.words1To19[n];
+        convertedWords = this.words1To19[langCode][n];
       } else if (n < 100) {
-        convertedWords = this.wordsTens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + this.words1To19[n % 10] : '');
+        convertedWords =
+          this.wordsTens[langCode][Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + this.words1To19[langCode][n % 10] : '');
       } else if (n < 1000) {
         convertedWords =
-          this.words1To19[Math.floor(n / 100)] +
-          ' hundred' +
-          (n % 100 !== 0 ? `${isAndNecessary ? ' and ' : ' '}` + this.convertToWords(n % 100) : '');
+          this.words1To19[langCode][Math.floor(n / 100)] +
+          ` ${this.wordsGeneral[langCode][0]}` +
+          (n % 100 !== 0
+            ? `${langCode === 'EN' ? ` ${this.wordsGeneral[langCode][1]} ` : ' '}` +
+              this.convertToWords(n % 100, langCode)
+            : '');
       } else {
         let words = '';
         // const numLength = n.toString().length;
@@ -183,9 +248,9 @@ export class NumberToWords {
           // console.log(`n % 1000 val---- ${i}`, part);
           if (part !== 0) {
             words =
-              `${localLengthHundred ? 'and ' : ''}` +
-              this.convertToWords(part) +
-              (this.wordsBig[i] ? ' ' + this.wordsBig[i] : ' ') +
+              `${localLengthHundred ? `${langCode === 'EN' ? `${this.wordsGeneral[langCode][1]} ` : ''}` : ''}` +
+              this.convertToWords(part, langCode) +
+              (this.wordsBig[langCode][i] ? ' ' + this.wordsBig[langCode][i] : ' ') +
               ' ' +
               words;
           }
