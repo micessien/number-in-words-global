@@ -35,3 +35,7 @@ console.log(ntw.toWords(223, LangCodes.FR)); // Response: deux cent vingt trois
 ```
 
 ---
+
+## Contributing
+
+In case you notice a bug, please open an issue mentioning the input that has caused an incorrect conversion.
