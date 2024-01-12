@@ -15,7 +15,7 @@ npm install number-in-words-global or yarn add number-in-words-global
 109434034 - one hundred and nine million four hundred and thirty four thousand and thirty four
 
 #### Input Parameters
-**number:** number or string (e.g. 11022, '245')
+**number:** number or string (e.g. 11022, '245')    
 **LangCodes:** EN, FR (more will be added in future)
 
 #### Usage - Javascript
