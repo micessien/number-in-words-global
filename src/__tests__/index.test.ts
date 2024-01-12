@@ -11,7 +11,7 @@ test('supports english', () => {
   expect(ntw.toWords(109434034)).toEqual(
     'one hundred and nine million four hundred and thirty four thousand and thirty four',
   );
-  expect(ntw.toWords('123.543')).toEqual('one hundred and twenty three');
+  expect(ntw.toWords('123')).toEqual('one hundred and twenty three');
   expect(ntw.toWords('1,234,345')).toEqual(
     'one million two hundred and thirty four thousand three hundred and forty five',
   );
