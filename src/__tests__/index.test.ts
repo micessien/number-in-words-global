@@ -6,6 +6,8 @@ test('supports english', () => {
   expect(ntw.toWords(0)).toEqual('zero');
   expect(ntw.toWords('0.0')).toEqual('zero');
   expect(ntw.toWords('0.6')).toEqual('zero point sixty');
+  expect(ntw.toWords('0.01')).toEqual('zero point one');
+  expect(ntw.toWords('0.06')).toEqual('zero point six');
   expect(ntw.toWords(123)).toEqual('one hundred and twenty three');
   expect(ntw.toWords(1001)).toEqual('one thousand and one');
   expect(ntw.toWords(1002)).toEqual('one thousand and two');

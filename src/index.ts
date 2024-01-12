@@ -57,6 +57,7 @@ export class NumberToWords {
     // Separate integer to decimal part
     const integerPart = parseInt(val.toString()); // Extracts the integer part
     const decimalPartMatch = val.toString().match(/\.\d*$/); // Extracts the decimal part
+    const decimalPartStartByZero = decimalPartMatch ? decimalPartMatch[0].substring(1).startsWith('0') : false; // Return true if decimal start by 0
     const decimalPart = decimalPartMatch ? parseInt(decimalPartMatch[0].substring(1)) : 0; // Assign the decimal value
     // console.log('🚀 ~ decimalPart:', decimalPart);
 
@@ -65,7 +66,9 @@ export class NumberToWords {
     }
 
     let numWords: string = this.convertToWords(integerPart);
-    numWords = numWords + (decimalPart !== 0 ? ' point ' + this.convertDecimalToWords(decimalPart) : '');
+    numWords =
+      numWords +
+      (decimalPart !== 0 ? ' point ' + this.convertDecimalToWords(decimalPart, true, decimalPartStartByZero) : '');
     return numWords;
   };
 
@@ -112,12 +115,16 @@ export class NumberToWords {
   };
 
   // Function convertor decimal
-  private convertDecimalToWords = (n: number, isAndNecessary: boolean = true): string => {
+  private convertDecimalToWords = (
+    n: number,
+    isAndNecessary: boolean = true,
+    decimalPartStartByZero: boolean = false,
+  ): string => {
     let convertedWords;
     const numberLength = n.toString().length;
     // console.log('🚀~ numberLength:', numberLength);
     // Check if length is one
-    if (numberLength === 1) {
+    if (numberLength === 1 && !decimalPartStartByZero) {
       switch (n) {
         case 1:
           convertedWords = this.words1To19[10];
