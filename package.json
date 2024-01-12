@@ -1,6 +1,6 @@
 {
   "name": "number-in-words-global",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Converts Numbers from digits to words",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
