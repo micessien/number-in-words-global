@@ -9,6 +9,7 @@ npm install number-in-words-global or yarn add number-in-words-global
 
 **Conversion Examples**  
 123 - one hundred and twenty three  
+0.6 - zero point sixty     
 1001 - one thousand and one     
 109434034 - one hundred and nine million four hundred and thirty four thousand and thirty four
 
