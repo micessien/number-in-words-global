@@ -16,21 +16,22 @@ npm install number-in-words-global or yarn add number-in-words-global
 
 #### Input Parameters
 **number:** number or string (e.g. 11022, '245')
+**LangCodes:** EN, FR (more will be added in future)
 
 #### Usage - Javascript
 ```javascript
 const ntwp = require('number-in-words-global');
 const ntw = new ntwp.NumberToWords();
 ...
-console.log(ntw.toWords(111));
+console.log(ntw.toWords(111)); // Response: one hundred and eleven
 ```
 
 #### Usage - Typescript
 ```typescript
-import { NumberToWords } from "number-in-words-global";
+import { NumberToWords, LangCodes } from "number-in-words-global";
 const ntw = new NumberToWords();
 ...
-console.log(ntw.toWords(123));
+console.log(ntw.toWords(223, LangCodes.FR)); // Response: deux cent vingt trois
 ```
 
 ---
